@@ -1,0 +1,236 @@
+<div class="product-management-container">
+  <!-- Header -->
+  <header class="page-header">
+    <h1>Product Management</h1>
+    <p>Add, edit, and manage your product inventory</p>
+  </header>
+
+  <!-- Success Message -->
+  @if (showSuccess()) {
+    <div class="success-banner">
+      <div class="success-content">
+        <svg class="success-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ successMessage() }}</span>
+      </div>
+    </div>
+  }
+
+  <div class="main-content">
+    <!-- Product Form -->
+    <div class="form-card">
+      <h2>{{ editingProduct ? 'Edit Product' : 'Add New Product' }}</h2>
+      
+      <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="product-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name" class="form-label">Product Name *</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-input"
+              placeholder="Enter product name"
+              required
+            />
+            @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+              <span class="error-message">Product name is required</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="category" class="form-label">Category *</label>
+            <input
+              type="text"
+              id="category"
+              formControlName="category"
+              class="form-input"
+              placeholder="Enter category"
+              required
+            />
+            @if (productForm.get('category')?.invalid && productForm.get('category')?.touched) {
+              <span class="error-message">Category is required</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="price" class="form-label">Price *</label>
+            <input
+              type="number"
+              id="price"
+              formControlName="price"
+              class="form-input"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              required
+            />
+            @if (productForm.get('price')?.invalid && productForm.get('price')?.touched) {
+              <span class="error-message">Valid price is required</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="stockQuantity" class="form-label">Stock Quantity *</label>
+            <input
+              type="number"
+              id="stockQuantity"
+              formControlName="stockQuantity"
+              class="form-input"
+              placeholder="0"
+              min="0"
+              required
+            />
+            @if (productForm.get('stockQuantity')?.invalid && productForm.get('stockQuantity')?.touched) {
+              <span class="error-message">Stock quantity is required</span>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description" class="form-label">Description</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-textarea"
+            placeholder="Enter product description"
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="image" class="form-label">Product Image</label>
+          <div class="image-upload-area">
+            <input
+              type="file"
+              id="image"
+              (change)="onFileSelected($event)"
+              accept="image/*"
+              class="file-input"
+            />
+            <label for="image" class="file-upload-label">
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7,10 12,15 17,10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Click to upload image or drag and drop</span>
+              <span class="file-info">PNG, JPG, GIF up to 5MB</span>
+            </label>
+            
+            @if (previewUrl) {
+              <div class="image-preview">
+                <img [src]="previewUrl" alt="Preview" />
+                <button
+                  type="button"
+                  (click)="previewUrl = null; selectedFile = null"
+                  class="remove-image-btn"
+                >
+                  ×
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="form-actions">
+          @if (editingProduct) {
+            <button
+              type="button"
+              (click)="cancelEdit()"
+              class="btn btn-secondary"
+            >
+              Cancel
+            </button>
+          }
+          <button
+            type="button"
+            (click)="resetForm()"
+            class="btn btn-secondary"
+          >
+            Reset
+          </button>
+          <button
+            type="submit"
+            [disabled]="!productForm.valid || isLoading()"
+            class="btn btn-primary"
+          >
+            @if (isLoading()) {
+              <svg class="loading-spinner" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/>
+                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+              </svg>
+              {{ editingProduct ? 'Updating...' : 'Creating...' }}
+            } @else {
+              {{ editingProduct ? 'Update Product' : 'Create Product' }}
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Products List -->
+    <div class="products-list-card">
+      <h2>Existing Products</h2>
+      
+      @if (isLoading() && products().length === 0) {
+        <div class="loading-state">
+          <svg class="loading-spinner" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/>
+            <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
+          </svg>
+          <p>Loading products...</p>
+        </div>
+      } @else if (products().length === 0) {
+        <div class="empty-state">
+          <p>No products found. Create your first product above.</p>
+        </div>
+      } @else {
+        <div class="products-grid">
+          @for (product of products(); track product.id) {
+            <div class="product-card">
+              <div class="product-image">
+                @if (product.imageUrl) {
+                  <img [src]="product.imageUrl" [alt]="product.name" />
+                } @else {
+                  <div class="no-image">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21,15 16,10 5,21"></polyline>
+                    </svg>
+                  </div>
+                }
+              </div>
+              
+              <div class="product-info">
+                <h3>{{ product.name }}</h3>
+                <p class="product-category">{{ product.category }}</p>
+                <p class="product-price">{{ formatCurrency(product.price) }}</p>
+                <p class="product-stock">Stock: {{ product.stockQuantity }}</p>
+                
+                <div class="product-actions">
+                  <button
+                    (click)="editProduct(product)"
+                    class="btn btn-sm btn-secondary"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    (click)="deleteProduct(product.id)"
+                    class="btn btn-sm btn-danger"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

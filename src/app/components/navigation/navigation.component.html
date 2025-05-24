@@ -18,6 +18,16 @@
           Generate Invoice
         </button>
         <button 
+          (click)="setActiveTab('products')" 
+          [class.active]="activeTab() === 'products'"
+          class="nav-tab"
+        >
+          <svg class="tab-icon" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM9 9a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd" />
+          </svg>
+          Manage Products
+        </button>
+        <button 
           (click)="setActiveTab('list')" 
           [class.active]="activeTab() === 'list'"
           class="nav-tab"
@@ -38,11 +48,12 @@
       <app-invoice-generator></app-invoice-generator>
     }
     
+    @if (activeTab() === 'products') {
+      <app-product-management></app-product-management>
+    }
+    
     @if (activeTab() === 'list') {
-      <div class="coming-soon">
-        <h2>Invoice History</h2>
-        <p>View all your generated invoices here. This feature will be available soon!</p>
-      </div>
+      <app-invoice-list></app-invoice-list>
     }
   </main>
 </div>

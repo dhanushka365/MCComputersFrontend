@@ -14,6 +14,8 @@ export class InvoiceListComponent implements OnInit {
   invoices = signal<InvoiceResponseDto[]>([]);
   isLoading = signal(false);
   selectedInvoice = signal<InvoiceResponseDto | null>(null);
+  searchTerm = signal<string>('');
+  filteredInvoices = signal<InvoiceResponseDto[]>([]);
 
   constructor(private invoiceService: InvoiceService) {}
 
@@ -26,6 +28,7 @@ export class InvoiceListComponent implements OnInit {
     this.invoiceService.getAllInvoices().subscribe({
       next: (invoices) => {
         this.invoices.set(invoices);
+        this.updateFilteredInvoices();
         this.isLoading.set(false);
       },
       error: (error) => {
@@ -35,11 +38,34 @@ export class InvoiceListComponent implements OnInit {
     });
   }
 
-  viewInvoice(invoice: InvoiceResponseDto) {
+  updateFilteredInvoices() {
+    let filtered = this.invoices();
+    
+    if (this.searchTerm()) {
+      const term = this.searchTerm().toLowerCase();
+      filtered = filtered.filter(invoice => 
+        invoice.id.toString().includes(term) ||
+        invoice.transactionDate.includes(term) ||
+        invoice.items.some(item => 
+          item.productName.toLowerCase().includes(term)
+        )
+      );
+    }
+
+    this.filteredInvoices.set(filtered);
+  }
+
+  onSearchChange(event: Event) {
+    const term = (event.target as HTMLInputElement).value;
+    this.searchTerm.set(term);
+    this.updateFilteredInvoices();
+  }
+
+  viewInvoiceDetails(invoice: InvoiceResponseDto) {
     this.selectedInvoice.set(invoice);
   }
 
-  closeInvoiceView() {
+  closeInvoiceDetails() {
     this.selectedInvoice.set(null);
   }
 
@@ -53,8 +79,19 @@ export class InvoiceListComponent implements OnInit {
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric'
     });
+  }
+
+  printInvoice(invoice: InvoiceResponseDto) {
+    this.selectedInvoice.set(invoice);
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  }
+
+  getTotalItems(invoice: InvoiceResponseDto): number {
+    return invoice.items.reduce((sum, item) => sum + item.quantity, 0);
   }
 }

@@ -1,0 +1,89 @@
+<div class="invoice-list-container">
+  <header class="page-header">
+    <h1>Invoice History</h1>
+    <p>View and manage all your generated invoices</p>
+  </header>
+
+  <div class="search-section">
+    <div class="search-group">
+      <input
+        type="text"
+        placeholder="Search invoices..."
+        (input)="onSearchChange($event)"
+        class="search-input"
+      />
+      <svg class="search-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+      </svg>
+    </div>
+    
+    <button 
+      (click)="loadInvoices()" 
+      class="btn btn-secondary"
+      [disabled]="isLoading()"
+    >
+      Refresh
+    </button>
+  </div>
+
+  @if (isLoading() && invoices().length === 0) {
+    <div class="loading-state">
+      <p>Loading invoices...</p>
+    </div>
+  }
+
+  @else if (filteredInvoices().length === 0 && !isLoading()) {
+    <div class="empty-state">
+      <h3>No Invoices Found</h3>
+      @if (searchTerm()) {
+        <p>No invoices match your search criteria.</p>
+      } @else {
+        <p>You haven't generated any invoices yet.</p>
+      }
+    </div>
+  }
+
+  @else {
+    <div class="invoices-grid">
+      @for (invoice of filteredInvoices(); track invoice.id) {
+        <div class="invoice-card">
+          <div class="invoice-header">
+            <div class="invoice-id">
+              <span class="id-label">Invoice</span>
+              <span class="id-number">#{{ invoice.id }}</span>
+            </div>
+            <div class="invoice-date">
+              {{ formatDate(invoice.transactionDate) }}
+            </div>
+          </div>
+
+          <div class="invoice-summary">
+            <div class="summary-item">
+              <span class="summary-label">Items</span>
+              <span class="summary-value">{{ getTotalItems(invoice) }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Amount</span>
+              <span class="summary-value amount">{{ formatCurrency(invoice.totalAmount) }}</span>
+            </div>
+          </div>
+
+          <div class="invoice-actions">
+            <button 
+              (click)="viewInvoiceDetails(invoice)"
+              class="btn btn-sm btn-secondary"
+            >
+              View Details
+            </button>
+            <button 
+              (click)="printInvoice(invoice)"
+              class="btn btn-sm btn-primary"
+            >
+              Print
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

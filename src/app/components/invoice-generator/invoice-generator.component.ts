@@ -159,6 +159,14 @@ export class InvoiceGeneratorComponent implements OnInit {
     return this.products().filter(p => p.category === category);
   }
 
+  getSelectedProduct(index: number): Product | undefined {
+    const productId = this.productItems.at(index)?.get('productId')?.value;
+    if (productId) {
+      return this.products().find(p => p.id === parseInt(productId));
+    }
+    return undefined;
+  }
+
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',

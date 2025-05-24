@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
+    "start": "ng serve MCComputersFrontend",
+    "build": "ng build MCComputersFrontend",
+    "watch": "ng build MCComputersFrontend --watch --configuration development",
+    "test": "ng test MCComputersFrontend",
     "serve:ssr:MCComputersFrontend": "node dist/mccomputers-frontend/server/server.mjs"
   },
   "private": true,

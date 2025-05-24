@@ -88,13 +88,31 @@
                       @for (category of categories(); track category) {
                         <optgroup [label]="category">
                           @for (product of getProductsInCategory(category); track product.id) {
-                            <option [value]="product.id">
+                            <option [value]="product.id" [attr.data-image]="product.imageUrl">
                               {{ product.name }} - {{ formatCurrency(product.price) }}
                             </option>
                           }
                         </optgroup>
                       }
                     </select>
+                    
+                    <!-- Product preview when selected -->
+                    @if (getSelectedProduct($index)) {
+                      <div class="selected-product-preview">
+                        @if (getSelectedProduct($index)?.imageUrl) {
+                          <img [src]="getSelectedProduct($index)?.imageUrl" [alt]="getSelectedProduct($index)?.name" class="product-thumbnail" />
+                        } @else {
+                          <div class="no-image-placeholder">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                              <polyline points="21,15 16,10 5,21"></polyline>
+                            </svg>
+                          </div>
+                        }
+                        <span class="product-name">{{ getSelectedProduct($index)?.name }}</span>
+                      </div>
+                    }
                   </div>
 
                   <div class="form-group">
@@ -198,8 +216,23 @@
                   <tr>
                     <td>
                       <div class="product-info">
-                        <span class="product-name">{{ item.product.name }}</span>
-                        <span class="product-category">{{ item.product.category }}</span>
+                        <div class="product-details">
+                          @if (item.product.imageUrl) {
+                            <img [src]="item.product.imageUrl" [alt]="item.product.name" class="invoice-product-image" />
+                          } @else {
+                            <div class="invoice-no-image">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21,15 16,10 5,21"></polyline>
+                              </svg>
+                            </div>
+                          }
+                          <div class="product-text">
+                            <span class="product-name">{{ item.product.name }}</span>
+                            <span class="product-category">{{ item.product.category }}</span>
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td>{{ item.quantity }}</td>
