@@ -44,16 +44,7 @@
 
   <!-- Content -->
   <main class="main-content">
-    @if (activeTab() === 'generate') {
-      <app-invoice-generator></app-invoice-generator>
-    }
-    
-    @if (activeTab() === 'products') {
-      <app-product-management></app-product-management>
-    }
-    
-    @if (activeTab() === 'list') {
-      <app-invoice-list></app-invoice-list>
-    }
+    <!-- Content will be rendered here by the router -->
+    <router-outlet></router-outlet>
   </main>
 </div>
