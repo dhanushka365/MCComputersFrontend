@@ -1,13 +1,4 @@
 <div class="invoice-generator-container">
-  <!-- Header -->
-  <header class="app-header">
-    <div class="header-content">
-      <h1 class="company-title">MC Computers</h1>
-      <p class="company-subtitle">Invoice Generation System</p>
-    </div>
-  </header>
-
-  <!-- Success Message -->
   @if (showSuccess()) {
     <div class="success-banner">
       <div class="success-content">
@@ -22,55 +13,34 @@
     </div>
   }
 
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Invoice Form -->
+  <div class="centered-content">
     <div class="invoice-form-card">
       <h2 class="form-title">Generate New Invoice</h2>
       
       <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()" class="invoice-form">
-        <!-- Transaction Date -->
-        <div class="form-group">
-          <label for="transactionDate" class="form-label">Transaction Date</label>
-          <input
-            type="date"
-            id="transactionDate"
-            formControlName="transactionDate"
-            class="form-input"
-            required
-          />
-        </div>
-        <!-- Discount -->
-        <div class="form-group">
-          <label for="discount" class="form-label">Discount (%)</label>
-          <input
-            type="number"
-            id="discount"
-            formControlName="discount"
-            class="form-input"
-            min="0"
-            max="100"
-            step="0.01"
-            placeholder="0.00"
-          />
+        <div class="form-row">
+          <div class="form-group">
+            <label for="transactionDate" class="form-label">Transaction Date</label>
+            <input type="date" id="transactionDate" formControlName="transactionDate" 
+                   class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label for="discount" class="form-label">Discount (%)</label>
+            <input type="number" id="discount" formControlName="discount" 
+                   class="form-input" min="0" max="100" step="0.01" placeholder="0.00" />
+          </div>
         </div>
 
-        <!-- Products Section -->
         <div class="products-section">
           <div class="section-header">
             <h3>Products</h3>
-            <button
-              type="button"
-              (click)="addProduct()"
-              class="btn btn-secondary"
-            >
+            <button type="button" (click)="addProduct()" class="btn btn-secondary">
               <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
               </svg>
               Add Product
             </button>
           </div>
-
           <!-- Product Items -->
           <div formArrayName="productItems" class="product-items">
             @for (item of productItems.controls; track $index) {
@@ -78,12 +48,7 @@
                 <div class="product-selectors">
                   <div class="form-group">
                     <label class="form-label">Product</label>
-                    <select
-                      formControlName="productId"
-                      (change)="onProductChange()"
-                      class="form-select"
-                      required
-                    >
+                    <select formControlName="productId" (change)="onProductChange()" class="form-select" required>
                       <option value="">Select a product</option>
                       @for (category of categories(); track category) {
                         <optgroup [label]="category">
@@ -96,7 +61,6 @@
                       }
                     </select>
                     
-                    <!-- Product preview when selected -->
                     @if (getSelectedProduct($index)) {
                       <div class="selected-product-preview">
                         @if (getSelectedProduct($index)?.imageUrl) {
@@ -110,29 +74,22 @@
                             </svg>
                           </div>
                         }
-                        <span class="product-name">{{ getSelectedProduct($index)?.name }}</span>
+                        <div class="product-info">
+                          <span class="product-name">{{ getSelectedProduct($index)?.name }}</span>
+                          <span class="product-category">{{ getSelectedProduct($index)?.category }}</span>
+                        </div>
                       </div>
                     }
                   </div>
 
                   <div class="form-group">
                     <label class="form-label">Quantity</label>
-                    <input
-                      type="number"
-                      formControlName="quantity"
-                      (change)="onQuantityChange()"
-                      class="form-input"
-                      min="1"
-                      required
-                    />
+                    <input type="number" formControlName="quantity" (change)="onQuantityChange()" 
+                           class="form-input" min="1" required />
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  (click)="removeProduct($index)"
-                  class="btn btn-danger remove-btn"
-                >
+                <button type="button" (click)="removeProduct($index)" class="btn btn-danger remove-btn">
                   <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                   </svg>
@@ -149,18 +106,10 @@
         </div>
         <!-- Form Actions -->
         <div class="form-actions">
-          <button
-            type="button"
-            (click)="resetForm()"
-            class="btn btn-secondary"
-          >
+          <button type="button" (click)="resetForm()" class="btn btn-secondary">
             Reset Form
           </button>
-          <button
-            type="submit"
-            [disabled]="!invoiceForm.valid || selectedProducts().length === 0 || isLoading()"
-            class="btn btn-primary"
-          >
+          <button type="submit" [disabled]="!invoiceForm.valid || selectedProducts().length === 0 || isLoading()" class="btn btn-primary">
             @if (isLoading()) {
               <svg class="loading-spinner" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/>
@@ -175,94 +124,89 @@
       </form>
     </div>
 
-    <!-- Invoice Preview -->
+    <!-- Invoice Preview (only show when products are selected) -->
     @if (selectedProducts().length > 0) {
-      <div class="invoice-preview-card">
-        <div class="preview-header">
-          <h2>Invoice Preview</h2>
-          <button
-            type="button"
-            (click)="printInvoice()"
-            class="btn btn-outline"
-          >
-            <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zM5 14a1 1 0 011-1h8a1 1 0 011 1v2H5v-2z" clip-rule="evenodd" />
-            </svg>
-            Print
-          </button>
-        </div>
-
-        <div class="invoice-preview">
-          <!-- Company Header -->
-          <div class="invoice-header">
-            <h1>MC Computers</h1>
-            <p>Computer Parts & Accessories</p>
-            <p class="invoice-date">Date: {{ invoiceForm.get('transactionDate')?.value | date }}</p>
+      <div class="invoice-preview-section">
+        <div class="invoice-preview-card">
+          <div class="preview-header">
+            <h2>Invoice Preview</h2>
+            <button type="button" (click)="printInvoice()" class="btn btn-outline">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zM5 14a1 1 0 011-1h8a1 1 0 011 1v2H5v-2z" clip-rule="evenodd" />
+              </svg>
+              Print
+            </button>
           </div>
 
-          <!-- Invoice Items -->
-          <div class="invoice-items">
-            <table class="items-table">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Unit Price</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (item of selectedProducts(); track item.product.id) {
+          <div class="invoice-preview">
+            <div class="invoice-header">
+              <h1>MC Computers</h1>
+              <p>Computer Parts & Accessories</p>
+              <p class="invoice-date">Date: {{ invoiceForm.get('transactionDate')?.value | date }}</p>
+            </div>
+
+            <div class="invoice-items">
+              <table class="items-table">
+                <thead>
                   <tr>
-                    <td>
-                      <div class="product-info">
-                        <div class="product-details">
-                          @if (item.product.imageUrl) {
-                            <img [src]="item.product.imageUrl" [alt]="item.product.name" class="invoice-product-image" />
-                          } @else {
-                            <div class="invoice-no-image">
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                                <polyline points="21,15 16,10 5,21"></polyline>
-                              </svg>
+                    <th>Product</th>
+                    <th>Qty</th>
+                    <th>Unit Price</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of selectedProducts(); track item.product.id) {
+                    <tr>
+                      <td>
+                        <div class="product-info">
+                          <div class="product-details">
+                            @if (item.product.imageUrl) {
+                              <img [src]="item.product.imageUrl" [alt]="item.product.name" class="invoice-product-image" />
+                            } @else {
+                              <div class="invoice-no-image">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                  <polyline points="21,15 16,10 5,21"></polyline>
+                                </svg>
+                              </div>
+                            }
+                            <div class="product-text">
+                              <span class="product-name">{{ item.product.name }}</span>
+                              <span class="product-category">{{ item.product.category }}</span>
                             </div>
-                          }
-                          <div class="product-text">
-                            <span class="product-name">{{ item.product.name }}</span>
-                            <span class="product-category">{{ item.product.category }}</span>
                           </div>
                         </div>
-                      </div>
-                    </td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ formatCurrency(item.unitPrice) }}</td>
-                    <td>{{ formatCurrency(item.totalPrice) }}</td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
+                      </td>
+                      <td>{{ item.quantity }}</td>
+                      <td>{{ formatCurrency(item.unitPrice) }}</td>
+                      <td>{{ formatCurrency(item.totalPrice) }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
 
-          <!-- Invoice Totals -->
-          <div class="invoice-totals">
-            <div class="total-row">
-              <span>Subtotal:</span>
-              <span>{{ formatCurrency(calculateSubtotal()) }}</span>
-            </div>
-            @if (calculateDiscount() > 0) {
-              <div class="total-row discount">
-                <span>Discount ({{ invoiceForm.get('discount')?.value }}%):</span>
-                <span>-{{ formatCurrency(calculateDiscount()) }}</span>
+            <div class="invoice-totals">
+              <div class="total-row">
+                <span>Subtotal:</span>
+                <span>{{ formatCurrency(calculateSubtotal()) }}</span>
               </div>
-            }
-            <div class="total-row final-total">
-              <span>Total Amount:</span>
-              <span>{{ formatCurrency(calculateTotal()) }}</span>
-            </div>
-            <div class="total-row balance">
-              <span>Balance Amount:</span>
-              <span>{{ formatCurrency(calculateTotal()) }}</span>
+              @if (calculateDiscount() > 0) {
+                <div class="total-row discount">
+                  <span>Discount ({{ invoiceForm.get('discount')?.value }}%):</span>
+                  <span>-{{ formatCurrency(calculateDiscount()) }}</span>
+                </div>
+              }
+              <div class="total-row final-total">
+                <span>Total Amount:</span>
+                <span>{{ formatCurrency(calculateTotal()) }}</span>
+              </div>
+              <div class="total-row balance">
+                <span>Balance Amount:</span>
+                <span>{{ formatCurrency(calculateTotal()) }}</span>
+              </div>
             </div>
           </div>
         </div>
