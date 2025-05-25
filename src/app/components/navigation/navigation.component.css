@@ -120,3 +120,11 @@
     justify-content: center;
   }
 }
+
+/* Hide navigation when printing */
+@media print {
+  .app-header,
+  .nav-tabs {
+    display: none;
+  }
+}

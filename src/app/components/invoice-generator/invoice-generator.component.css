@@ -577,59 +577,30 @@
   }
 }
 
-/* Print Styles - Hide everything except invoice preview */
+/* Simple Print Styles - Show invoice, hide navigation */
 @media print {
-  /* Hide all page elements except invoice preview */
-  body *:not(.invoice-preview):not(.invoice-preview *) {
-    visibility: hidden !important;
-  }
-  
-  /* Hide specific unwanted elements completely */
+  /* Hide navigation and form elements */
   .success-banner,
   .form-side,
   .preview-header,
   .centered-content,
   .invoice-form-card,
   .side-by-side-layout .form-side,
-  nav, header, footer, button, .btn {
-    display: none !important;
+  button,
+  .btn {
+    display: none;
   }
   
-  /* Ensure invoice preview is visible and properly positioned */
+  /* Make sure invoice preview is visible */
   .invoice-preview {
+    display: block !important;
     visibility: visible !important;
-    position: static !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
   }
   
-  /* Keep all existing table styles exactly the same */
-  .invoice-preview .items-table {
-    visibility: visible !important;
-  }
-  
-  .invoice-preview .items-table,
-  .invoice-preview .items-table *,
-  .invoice-preview .invoice-header,
-  .invoice-preview .invoice-header *,
-  .invoice-preview .invoice-items,
-  .invoice-preview .invoice-items *,
-  .invoice-preview .invoice-totals,
-  .invoice-preview .invoice-totals *,
-  .invoice-preview .product-info,
-  .invoice-preview .product-info *,
-  .invoice-preview .product-details,
-  .invoice-preview .product-details *,
-  .invoice-preview .product-text,
-  .invoice-preview .product-text * {
-    visibility: visible !important;
-  }
-  
-  /* Set page margins */
   @page {
     margin: 0.5in;
   }
