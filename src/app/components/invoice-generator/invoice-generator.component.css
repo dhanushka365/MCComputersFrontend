@@ -555,3 +555,33 @@
     padding: 0 1rem;
   }
 }
+
+@media (max-width: 1200px) {
+  .side-by-side-layout .form-side,
+  .side-by-side-layout .preview-side {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .side-by-side-layout .invoice-form-card,
+  .side-by-side-layout .invoice-preview-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 768px) {
+  .side-by-side-layout .form-side,
+  .side-by-side-layout .preview-side {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .side-by-side-layout .invoice-form-card,
+  .side-by-side-layout .invoice-preview-card {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+  }
+}
