@@ -514,6 +514,7 @@
     padding: 0.75rem 0.5rem;
   }
 }
+
 /* Side-by-side layout styles */
 .side-by-side-layout {
   display: flex;
@@ -524,15 +525,14 @@
 
 .form-side {
   flex: 1;
-  min-width: 0; /* Allow content to shrink */
+  min-width: 0;
 }
 
 .preview-side {
   flex: 1;
-  min-width: 0; /* Allow content to shrink */
+  min-width: 0;
 }
 
-/* Adjust form card for side-by-side layout */
 .side-by-side-layout .invoice-form-card {
   margin-bottom: 0;
 }
@@ -544,9 +544,17 @@
     gap: 1rem;
   }
   
-  .form-side,
-  .preview-side {
-    flex: none;
+  .side-by-side-layout .form-side,
+  .side-by-side-layout .preview-side {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .side-by-side-layout .invoice-form-card,
+  .side-by-side-layout .invoice-preview-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 }
 
@@ -554,24 +562,7 @@
   .side-by-side-layout {
     padding: 0 1rem;
   }
-}
-
-@media (max-width: 1200px) {
-  .side-by-side-layout .form-side,
-  .side-by-side-layout .preview-side {
-    width: 100%;
-    max-width: 100%;
-  }
   
-  .side-by-side-layout .invoice-form-card,
-  .side-by-side-layout .invoice-preview-card {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-}
-
-@media (max-width: 768px) {
   .side-by-side-layout .form-side,
   .side-by-side-layout .preview-side {
     width: 100%;
@@ -583,5 +574,63 @@
     width: 100%;
     margin: 0;
     box-sizing: border-box;
+  }
+}
+
+/* Print Styles - Hide everything except invoice preview */
+@media print {
+  /* Hide all page elements except invoice preview */
+  body *:not(.invoice-preview):not(.invoice-preview *) {
+    visibility: hidden !important;
+  }
+  
+  /* Hide specific unwanted elements completely */
+  .success-banner,
+  .form-side,
+  .preview-header,
+  .centered-content,
+  .invoice-form-card,
+  .side-by-side-layout .form-side,
+  nav, header, footer, button, .btn {
+    display: none !important;
+  }
+  
+  /* Ensure invoice preview is visible and properly positioned */
+  .invoice-preview {
+    visibility: visible !important;
+    position: static !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Keep all existing table styles exactly the same */
+  .invoice-preview .items-table {
+    visibility: visible !important;
+  }
+  
+  .invoice-preview .items-table,
+  .invoice-preview .items-table *,
+  .invoice-preview .invoice-header,
+  .invoice-preview .invoice-header *,
+  .invoice-preview .invoice-items,
+  .invoice-preview .invoice-items *,
+  .invoice-preview .invoice-totals,
+  .invoice-preview .invoice-totals *,
+  .invoice-preview .product-info,
+  .invoice-preview .product-info *,
+  .invoice-preview .product-details,
+  .invoice-preview .product-details *,
+  .invoice-preview .product-text,
+  .invoice-preview .product-text * {
+    visibility: visible !important;
+  }
+  
+  /* Set page margins */
+  @page {
+    margin: 0.5in;
   }
 }
