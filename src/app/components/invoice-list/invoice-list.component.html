@@ -86,4 +86,98 @@
       }
     </div>
   }
+
+  <!-- Invoice Details Modal -->
+  @if (selectedInvoice()) {
+    <div class="modal-overlay" (click)="closeInvoiceDetails()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Invoice Details</h2>
+          <div class="modal-actions">
+            <button (click)="printSelectedInvoice()" class="btn btn-primary">
+              <svg class="btn-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zM5 14a1 1 0 011-1h8a1 1 0 011 1v2H5v-2z" clip-rule="evenodd" />
+              </svg>
+              Print
+            </button>
+            <button (click)="closeInvoiceDetails()" class="btn btn-secondary">
+              Close
+            </button>
+          </div>
+        </div>
+
+        <!-- Invoice Preview (same format as generator) -->
+        <div class="invoice-preview">
+          <div class="invoice-header">
+            <h1>MC Computers</h1>
+            <p>Computer Parts & Accessories</p>
+            <p class="invoice-date">Date: {{ formatDate(selectedInvoice()!.transactionDate) }}</p>
+          </div>
+
+          <div class="invoice-items">
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Unit Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of selectedInvoice()!.items; track item.id) {
+                  <tr>
+                    <td>
+                      <div class="product-info">
+                        <div class="product-details">
+                          @if (getProductImageUrl(item.productId)) {
+                            <img [src]="getProductImageUrl(item.productId)" [alt]="item.productName" class="invoice-product-image" />
+                          } @else {
+                            <div class="invoice-no-image">
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21,15 16,10 5,21"></polyline>
+                              </svg>
+                            </div>
+                          }
+                          <div class="product-text">
+                            <span class="product-name">{{ item.productName }}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ formatCurrency(item.productPrice) }}</td>
+                    <td>{{ formatCurrency(item.totalPrice) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="invoice-totals">
+            <div class="total-row">
+              <span>Subtotal:</span>
+              <span>{{ formatCurrency(calculateSubtotal(selectedInvoice()!)) }}</span>
+            </div>
+            @if (selectedInvoice()!.discount && selectedInvoice()!.discount! > 0) {
+              <div class="total-row discount">
+                <span>Discount ({{ selectedInvoice()!.discount }}%):</span>
+                <span>-{{ formatCurrency(calculateDiscount(selectedInvoice()!)) }}</span>
+              </div>
+            }
+            <div class="total-row final-total">
+              <span>Total Amount:</span>
+              <span>{{ formatCurrency(selectedInvoice()!.totalAmount) }}</span>
+            </div>
+            <div class="total-row balance">
+              <span>Balance Amount:</span>
+              <span>{{ formatCurrency(selectedInvoice()!.balanceAmount) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>

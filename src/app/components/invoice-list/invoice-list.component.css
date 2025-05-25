@@ -489,3 +489,169 @@
     padding: 0;
   }
 }
+
+
+/* Invoice Preview Styles (same as generator) */
+.invoice-preview {
+  background: var(--white, white);
+  border-radius: 8px;
+  padding: 2rem;
+  border: 1px solid #e5e7eb;
+  margin: 1.5rem 0;
+}
+
+.invoice-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.invoice-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #059669;
+  margin: 0 0 0.5rem 0;
+}
+
+.invoice-header p {
+  color: #6b7280;
+  margin: 0.25rem 0;
+}
+
+.invoice-date {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Invoice Table */
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+}
+
+.items-table th,
+.items-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.items-table th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+}
+
+.product-details {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.invoice-no-image {
+  width: 40px;
+  height: 40px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+}
+
+.invoice-no-image svg {
+  width: 20px;
+  height: 20px;
+}
+
+.invoice-product-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+}
+
+.product-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-name {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.9rem;
+}
+
+/* Invoice Totals */
+.invoice-totals {
+  margin-left: auto;
+  max-width: 300px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.total-row.discount {
+  color: #059669;
+}
+
+.total-row.final-total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-bottom: 3px solid #059669;
+  color: #374151;
+}
+
+.total-row.balance {
+  font-weight: 600;
+  color: #059669;
+}
+
+/* Print Styles for Invoice List */
+@media print {
+  /* Hide everything except invoice preview */
+  .invoice-list-container > *:not(.modal-overlay) {
+    display: none !important;
+  }
+  
+  .modal-overlay {
+    position: static !important;
+    background: none !important;
+    backdrop-filter: none !important;
+  }
+  
+  .modal-content {
+    box-shadow: none !important;
+    max-width: none !important;
+    width: 100% !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+  }
+  
+  .modal-header,
+  .modal-actions {
+    display: none !important;
+  }
+  
+  .invoice-preview {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+  
+  @page {
+    margin: 0.5in;
+  }
+}
